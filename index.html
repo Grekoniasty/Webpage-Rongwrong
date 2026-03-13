@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rongwrong</title>
+    <meta name="description" content="rongwrong - Polish experimental ambient group since 1990">
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#0a0a0a',
+                        abyss: '#121212',
+                        smoke: '#1a1a1a',
+                        ash: '#2a2a2a',
+                        bone: '#d4d4d4',
+                        rust: '#8b2500',
+                        blood: '#6b1c1c',
+                        ember: '#b34233',
+                    },
+                    fontFamily: {
+                        display: ['"Cormorant Garamond"', 'serif'],
+                        body: ['"Space Mono"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            background: radial-gradient(ellipse at center, transparent 0%, transparent 50%, rgba(0,0,0,0.6) 100%);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #6b1c1c;
+            border-radius: 3px;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            92% { opacity: 1; }
+            93% { opacity: 0.8; }
+            94% { opacity: 1; }
+            96% { opacity: 0.9; }
+            97% { opacity: 1; }
+        }
+        .flicker {
+            animation: flicker 8s infinite;
+        }
+        @keyframes drift {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(0.5deg); }
+        }
+        .drift {
+            animation: drift 12s ease-in-out infinite;
+        }
+        .carousel-item {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: grayscale(60%) brightness(0.6);
+        }
+        .carousel-item:hover,
+        .carousel-item.active {
+            filter: grayscale(0%) brightness(1);
+            transform: scale(1.02);
+        }
+        .project-detail {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #8b2500;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+
+        .hero-bg {
+            background-color: #0a0a0a;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+
+        .tab-btn.active {
+            color: #b34233;
+            border-color: #8b2500;
+        }
+        
+
+        .img-placeholder {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a4a4a;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+        }
+        
+
+        .gallery-item {
+            transition: all 0.4s ease;
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+        
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #8b2500 !important;
+            box-shadow: 0 0 0 1px #8b2500;
+        }
+        
+        [data-lang="en"] .lang-pl,
+        [data-lang="pl"] .lang-en {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-void text-bone font-body">
+    <div class="grain"></div>
+
+    <div class="vignette"></div>
+    
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-void/80 backdrop-blur-sm border-b border-ash/30">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#hero" class="font-display text-xl tracking-widest text-bone/80 hover:text-bone transition-colors">
+                rongwrong
+            </a>
+            
+            <div class="flex items-center gap-8">
+                <div class="hidden md:flex items-center gap-6 text-sm tracking-wider">
+                    <a href="#about" class="nav-link text-bone/60 hover:text-bone transition-colors">
+                        <span class="lang-en">About</span>
+                        <span class="lang-pl">O nas</span>
+                    </a>
+                    <a href="#projects" class="nav-link text-bone/60 hover:text-bone transition-colors">
+                        <span class="lang-en">Projects</span>
+                        <span class="lang-pl">Projekty</span>
+                    </a>
+                    <a href="#contact" class="nav-link text-bone/60 hover:text-bone transition-colors">
+                        <span class="lang-en">Contact</span>
+                        <span class="lang-pl">Kontakt</span>
+                    </a>
+                </div>
+
+                <button id="lang-toggle" class="text-xs tracking-widest text-bone/40 hover:text-rust transition-colors border border-ash/50 px-2 py-1">
+                    <span class="lang-en">EN</span>
+                    <span class="lang-pl">PL</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-void/95 backdrop-blur-sm border-t border-ash/30">
+        <div class="flex justify-around py-4 text-xs tracking-wider">
+            <a href="#about" class="text-bone/60 hover:text-bone transition-colors">
+                <span class="lang-en">About</span>
+                <span class="lang-pl">O nas</span>
+            </a>
+            <a href="#projects" class="text-bone/60 hover:text-bone transition-colors">
+                <span class="lang-en">Projects</span>
+                <span class="lang-pl">Projekty</span>
+            </a>
+            <a href="#contact" class="text-bone/60 hover:text-bone transition-colors">
+                <span class="lang-en">Contact</span>
+                <span class="lang-pl">Kontakt</span>
+            </a>
+        </div>
+    </div>
+
+    <section id="hero" class="hero-bg min-h-screen flex flex-col justify-center items-center relative">
+        <div class="absolute inset-0 bg-void">
+            <div class="absolute inset-0 img-placeholder opacity-50">
+                <img src="img/hero-bg.jpg" class="w-full h-full object-cover opacity-30" alt="">
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-b from-void/50 via-transparent to-void"></div>
+        </div>
+        
+        <div class="relative z-10 text-center px-6">
+            <h1 class="font-display text-3xl sm:text-5xl md:text-8xl lg:text-9xl tracking-[0.15em] sm:tracking-[0.2em] md:tracking-[0.3em] text-bone flicker drift">
+                rongwrong
+            </h1>
+            <p class="mt-6 text-sm md:text-base tracking-[0.5em] text-bone/40 uppercase">
+                <span class="lang-en">Living sonic texture</span>
+                <span class="lang-pl">Żywa materia dźwięku</span>
+            </p>
+        </div>
+        <div class="absolute bottom-24 md:bottom-12 left-1/2 -translate-x-1/2">
+            <a href="#about" class="flex flex-col items-center text-bone/30 hover:text-bone/60 transition-colors">
+                <span class="text-xs tracking-widest mb-2">
+                    <span class="lang-en">scroll</span>
+                    <span class="lang-pl">przewiń</span>
+                </span>
+                <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+            </a>
+        </div>
+    </section>
+    <section id="about" class="min-h-screen flex items-center py-24 relative">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="font-display text-4xl md:text-5xl tracking-wider text-bone/90 mb-12">
+                <span class="lang-en">About</span>
+                <span class="lang-pl">O nas</span>
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <div>
+                    <p class="text-bone/70 leading-relaxed mb-6 lang-en">
+                       <b>Rongwrong</b> is a space of sonic exploration and subtle narratives. Founded in 1990, the project is now shaped by Maciej Piaseczyński and Andrzej Pacewicz.
+                    </p>
+                    <p class="text-bone/70 leading-relaxed mb-6 lang-pl">
+                        <b>Rongwrong</b> to przestrzeń dźwiękowych poszukiwań i subtelnych narracji. Powstały w 1990 roku projekt, dziś tworzony przez Macieja Piaseczyńskiego i Andrzeja Pacewicza.
+                    </p>
+
+                    <p class="text-bone/70 leading-relaxed lang-pl">
+                        Ich muzyka meandruje pomiędzy światami mitów i wyszeptanych historii, budując wibrujące pejzaże pełne napięcia i spokoju.
+                        Są to przestrzenie zawieszone między ciszą a hałasem, między pamięcią a zapomnieniem, między organicznym ciepłem instrumentów a akustycznym zniekształceniem.
+                    </p>
+                    
+                    <p class="text-bone/70 leading-relaxed lang-en">
+                       Their music drifts through realms of myth and whispered stories, forming vibrating landscapes filled with tension and calm. These are spaces suspended between silence and noise, between memory and oblivion, between the organic warmth of instruments and acoustic distortion.
+                    </p>
+                </div>
+                
+                <div class="flex flex-col justify-center">
+                    <div class="border-l border-rust/50 pl-6">
+                        <h3 class="text-xs tracking-widest text-rust uppercase mb-4">
+                            <span class="lang-en">Current Formation</span>
+                            <span class="lang-pl">Obecny skład</span>
+                        </h3>
+                        <ul class="space-y-2 text-bone/60">
+                            <li>Maciej Piaseczyński</li>
+                            <li>Andrzej Pacewicz</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="border-l border-ash/50 pl-6 mt-8">
+                        <h3 class="text-xs tracking-widest text-bone/40 uppercase mb-4">
+                            <span class="lang-en">Notable Appearances</span>
+                            <span class="lang-pl">Ważniejsze występy</span>
+                        </h3>
+                        <ul class="space-y-1 text-sm text-bone/50">
+                            <li>Audiosphere, Museo Reina Sofia, Madrid</li>
+                            <li>Wrocław Industrial Festival</li>
+                            <li>Gorlice Ambient Festival</li>
+                            <li>Temple of Silence</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="projects" class="min-h-screen py-24 bg-abyss/50">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="font-display text-4xl md:text-5xl tracking-wider text-bone/90 mb-8">
+                <span class="lang-en">Projects</span>
+                <span class="lang-pl">Projekty</span>
+            </h2>
+            <div class="flex gap-6 mb-12 border-b border-ash/30 pb-4">
+                <button class="tab-btn active text-sm tracking-widest uppercase text-bone/60 hover:text-bone transition-colors pb-2 border-b-2 border-transparent" data-tab="events">
+                    <span class="lang-en">Events</span>
+                    <span class="lang-pl">Wydarzenia</span>
+                </button>
+                <button class="tab-btn text-sm tracking-widest uppercase text-bone/60 hover:text-bone transition-colors pb-2 border-b-2 border-transparent" data-tab="albums">
+                    <span class="lang-en">Albums</span>
+                    <span class="lang-pl">Albumy</span>
+                </button>
+            </div>
+            <div class="relative mb-8">
+                <div id="carousel" class="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
+                </div>
+                <button id="carousel-prev" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-void/80 border border-ash/50 p-2 text-bone/60 hover:text-bone hover:border-rust transition-all hidden md:block">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                <button id="carousel-next" class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-void/80 border border-ash/50 p-2 text-bone/60 hover:text-bone hover:border-rust transition-all hidden md:block">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="project-detail" class="project-detail bg-smoke/30 border border-ash/20 p-6 md:p-10">
+                <div class="text-center text-bone/40 py-12">
+                    <span class="lang-en">Select a project above</span>
+                    <span class="lang-pl">Wybierz projekt powyżej</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="contact" class="min-h-screen flex items-center py-24 relative">
+        <div class="max-w-4xl mx-auto px-6 w-full">
+            <h2 class="font-display text-4xl md:text-5xl tracking-wider text-bone/90 mb-12">
+                <span class="lang-en">Contact</span>
+                <span class="lang-pl">Kontakt</span>
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <div>
+                    <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/success.html" class="space-y-6">
+                        <input type="hidden" name="form-name" value="contact">
+                        <p class="hidden">
+                            <label>Don't fill this out: <input name="bot-field"></label>
+                        </p>
+                        
+                        <div>
+                            <label class="block text-xs tracking-widest text-bone/40 uppercase mb-2">
+                                <span class="lang-en">Name</span>
+                                <span class="lang-pl">Imię</span>
+                            </label>
+                            <input type="text" name="name" required 
+                                   class="w-full bg-smoke/50 border border-ash/30 px-4 py-3 text-bone placeholder-bone/20 transition-colors">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs tracking-widest text-bone/40 uppercase mb-2">
+                                Email
+                            </label>
+                            <input type="email" name="email" required 
+                                   class="w-full bg-smoke/50 border border-ash/30 px-4 py-3 text-bone placeholder-bone/20 transition-colors">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs tracking-widest text-bone/40 uppercase mb-2">
+                                <span class="lang-en">Message</span>
+                                <span class="lang-pl">Wiadomość</span>
+                            </label>
+                            <textarea name="message" rows="5" required 
+                                      class="w-full bg-smoke/50 border border-ash/30 px-4 py-3 text-bone placeholder-bone/20 transition-colors resize-none"></textarea>
+                        </div>
+                        
+                        <button type="submit" 
+                                class="bg-rust/80 hover:bg-rust text-bone px-8 py-3 text-sm tracking-widest uppercase transition-colors border border-rust">
+                            <span class="lang-en">Send</span>
+                            <span class="lang-pl">Wyślij</span>
+                        </button>
+                    </form>
+                </div>
+                <div class="flex flex-col justify-center">
+                    <div class="space-y-8">
+                        <div>
+                            <h3 class="text-xs tracking-widest text-bone/40 uppercase mb-3">
+                                <span class="lang-en">Label</span>
+                                <span class="lang-pl">Wydawca</span>
+                            </h3>
+                            <a href="http://requiem-records.com/pl/artysci/maciej_piaseczynski_rongwrong" 
+                               target="_blank" rel="noopener"
+                               class="text-bone/70 hover:text-rust transition-colors flex items-center gap-2">
+                                Requiem Records
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                </svg>
+                            </a>
+                        </div>
+                        <div>
+                            <h3 class="text-xs tracking-widest text-bone/40 uppercase mb-3">
+                                <span class="lang-en">Follow</span>
+                                <span class="lang-pl">Obserwuj</span>
+                            </h3>
+                            <div class="flex gap-4">
+                                <a href="https://www.facebook.com/profile.php?id=100071072304506" class="text-bone/50 hover:text-rust transition-colors p-2 border border-ash/30 hover:border-rust">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                    </svg>
+                                </a>
+                                <a href="https://www.instagram.com/_rongwrong_/" class="text-bone/50 hover:text-rust transition-colors p-2 border border-ash/30 hover:border-rust">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                    </svg>
+                                </a>
+                                <a href="https://soundcloud.com/requiem-records-1/rongwrong-skupiska-ekspozycja-3" target="_blank" rel="noopener"
+                                   class="text-bone/50 hover:text-rust transition-colors p-2 border border-ash/30 hover:border-rust">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M1.175 12.225c-.051 0-.094.046-.101.1l-.233 2.154.233 2.105c.007.058.05.098.101.098.05 0 .09-.04.099-.098l.255-2.105-.27-2.154c-.009-.06-.052-.1-.084-.1zm-.899 1.225c-.053 0-.084.04-.09.098l-.2 1.03.2 1.025c.006.053.037.09.09.09.049 0 .084-.04.09-.09l.227-1.025-.227-1.03c-.006-.053-.038-.098-.09-.098zm1.83-1.188c-.062 0-.11.05-.117.11l-.22 2.12.22 2.073c.007.062.055.11.117.11.062 0 .108-.05.117-.11l.25-2.073-.25-2.12c-.009-.062-.055-.11-.117-.11zm.922-.562c-.073 0-.127.058-.133.127l-.2 2.682.2 2.618c.006.07.06.126.133.126.072 0 .125-.056.133-.126l.226-2.618-.226-2.682c-.008-.07-.061-.127-.133-.127zm.92-.417c-.083 0-.142.066-.15.148l-.18 3.1.18 3.015c.008.08.067.146.15.146.08 0 .14-.066.148-.146l.203-3.015-.203-3.1c-.008-.082-.068-.148-.148-.148zm.933-.296c-.093 0-.158.074-.163.166l-.16 3.396.16 3.28c.005.092.07.164.163.164.09 0 .156-.072.163-.164l.18-3.28-.18-3.396c-.007-.092-.073-.166-.163-.166zm.942-.19c-.1 0-.172.08-.178.18l-.14 3.586.14 3.42c.006.1.078.18.178.18.098 0 .17-.08.178-.18l.16-3.42-.16-3.586c-.008-.1-.08-.18-.178-.18zm.94-.108c-.11 0-.187.088-.193.198l-.12 3.694.12 3.52c.006.108.083.196.193.196.108 0 .183-.088.192-.196l.136-3.52-.136-3.694c-.009-.11-.084-.198-.192-.198zm.96-.04c-.12 0-.2.096-.206.215l-.1 3.734.1 3.57c.006.118.086.213.206.213.118 0 .197-.095.205-.214l.113-3.57-.113-3.733c-.008-.12-.087-.215-.205-.215zm.95.02c-.13 0-.214.103-.22.232l-.08 3.713.08 3.57c.006.127.09.23.22.23.127 0 .21-.103.218-.23l.093-3.57-.093-3.713c-.008-.13-.09-.232-.218-.232zm.968.055c-.14 0-.227.11-.232.25l-.063 3.658.063 3.54c.005.138.092.247.232.247.137 0 .223-.11.23-.248l.072-3.54-.072-3.657c-.007-.14-.093-.25-.23-.25zm5.758 2.063c-.326 0-.64.06-.935.164-.193-2.187-2.034-3.9-4.293-3.9-.56 0-1.1.11-1.593.296-.187.07-.237.143-.24.283v7.67c.003.143.1.265.24.285h6.82c1.39 0 2.52-1.138 2.52-2.54s-1.13-2.257-2.52-2.257z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xs tracking-widest text-bone/40 uppercase mb-3">
+                                <span class="lang-en">Direct</span>
+                                <span class="lang-pl">Bezpośrednio</span>
+                            </h3>
+                            <a href="mailto:contact@rongwrong.eu" class="text-bone/70 hover:text-rust transition-colors">
+                                contact@rongwrong.eu
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="border-t border-ash/20 py-8">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-xs text-bone/30 tracking-wider">
+                © 2026 Rongwrong. 
+                <span class="lang-en">All rights reserved.</span>
+                <span class="lang-pl">Wszelkie prawa zastrzeżone.</span>
+            </p>
+        </div>
+    </footer>
+    
+    <script src="js/main.js"></script>
+</body>
+</html>

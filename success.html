@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You | Rongwrong</title>
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#0a0a0a',
+                        abyss: '#121212',
+                        smoke: '#1a1a1a',
+                        ash: '#2a2a2a',
+                        bone: '#d4d4d4',
+                        rust: '#8b2500',
+                        blood: '#6b1c1c',
+                        ember: '#b34233',
+                    },
+                    fontFamily: {
+                        display: ['"Cormorant Garamond"', 'serif'],
+                        body: ['"Space Mono"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            background: radial-gradient(ellipse at center, transparent 0%, transparent 50%, rgba(0,0,0,0.6) 100%);
+        }
+    </style>
+</head>
+<body class="bg-void text-bone font-body min-h-screen flex items-center justify-center relative">
+    <div class="absolute inset-0 bg-void">
+        <img src="img/hero-bg.jpg" class="w-full h-full object-cover opacity-20" alt="">
+        <div class="absolute inset-0 bg-gradient-to-b from-void/50 via-transparent to-void"></div>
+    </div>
+    <div class="grain"></div>
+    <div class="vignette"></div>
+    
+    <div class="relative z-10 text-center px-6">
+        <h1 class="font-display text-4xl md:text-6xl tracking-wider text-bone/90 mb-6">
+            <span class="lang-en">Thank you</span>
+            <span class="lang-pl hidden">Dziękujemy</span>
+        </h1>
+        
+        <p class="text-bone/60 mb-8 max-w-md mx-auto">
+            <span class="lang-en">Your message has been sent. We'll get back to you soon.</span>
+            <span class="lang-pl hidden">Twoja wiadomość została wysłana. Odpowiemy wkrótce.</span>
+        </p>
+        
+        <a href="/" class="inline-block border border-rust/50 text-rust hover:bg-rust hover:text-bone px-6 py-3 text-sm tracking-widest uppercase transition-all">
+            <span class="lang-en">Back to site</span>
+            <span class="lang-pl hidden">Powrót</span>
+        </a>
+    </div>
+    
+    <script>
+        const lang = localStorage.getItem('rongwrong-lang') || 'en';
+        if (lang === 'pl') {
+            document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.lang-pl').forEach(el => el.classList.remove('hidden'));
+        }
+        
+        // Auto redirect after 4 seconds
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 4000);
+    </script>
+</body>
+</html>
