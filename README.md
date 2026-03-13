@@ -39,12 +39,15 @@ rongwrong/
 └── README.md
 ```
 
+## What It Does
+
+The site serves as a central archive and contact point for the group. Visitors can browse through years of live performances — from the 2016 Audiopolis festival in Madrid to the 2024 Temple of Silence — and explore the discography, including releases like *Epiphany* (1993), *Krwy* (2014), and the upcoming *Homunkulus Pojawa* (2026). A language toggle switches all content between Polish and English, and a contact form allows direct inquiries.
+
 ## Setup
 
 1. Clone the repo
-2. Add images to `img/` (thumbnails: 400×400px, gallery: 800–1200px longest edge)
-3. Deploy to Netlify via GitHub integration or drag-and-drop
-4. Point your domain's A record to `75.2.60.5` and add a `www` CNAME to your Netlify subdomain
+2. Add images to `img/`
+3. Deploy to any static hosting provider (Netlify, Vercel, GitHub Pages, etc.)
 
 ## License
 
